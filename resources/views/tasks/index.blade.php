@@ -33,7 +33,7 @@
         a.create-task-link {
             display: inline-block;
             margin-bottom: 15px;
-            padding: 10px 15px;
+            padding: 10px 20px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
@@ -46,30 +46,59 @@
             background-color: #0056b3;
         }
 
+        .table-container {
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid black;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         th,
         td {
             padding: 10px;
             text-align: left;
+            white-space: nowrap;
         }
 
         th {
+            background-color: #007bff;
+            color: white;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        td {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        tr:nth-child(even) {
             background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #eaf4ff;
+        }
+
+        td.description-column {
+            max-width: 100%;
         }
 
         .operations {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 10px;
         }
 
         form.delete-form,
@@ -80,16 +109,20 @@
 
         form input[type="submit"],
         a.edit-link {
-            padding: 5px 10px;
+            padding: 8px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
         form input[type="submit"] {
             background-color: #dc3545;
             color: white;
-            transition: background-color 0.3s ease;
         }
 
         form input[type="submit"]:hover {
@@ -100,7 +133,6 @@
             background-color: #28a745;
             color: white;
             text-decoration: none;
-            transition: background-color 0.3s ease;
         }
 
         a.edit-link:hover {
@@ -120,33 +152,35 @@
 
     <a href="{{ route('tasks.create') }}" class="create-task-link">Create New Task</a>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Operations</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($tasks as $task)
+    <div class="table-container">
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ $task->id }}</td>
-                    <td>{{ $task->title }}</td>
-                    <td>{{ $task->description }}</td>
-                    <td class="operations">
-                        <a href="{{ route('tasks.edit', $task->id) }}" class="edit-link">Edit</a>
-                        <form method="POST" action="{{ route('tasks.delete', $task->id) }}" class="delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <input type="submit" value="Delete" />
-                        </form>
-                    </td>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th class="description-column">Description</th>
+                    <th>Operations</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($tasks as $task)
+                    <tr>
+                        <td>{{ $task->id }}</td>
+                        <td>{{ $task->title }}</td>
+                        <td class="description-column">{{ $task->description }}</td>
+                        <td class="operations">
+                            <a href="{{ route('tasks.edit', $task->id) }}" class="edit-link">Edit</a>
+                            <form method="POST" action="{{ route('tasks.delete', $task->id) }}" class="delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <input type="submit" value="Delete" />
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
